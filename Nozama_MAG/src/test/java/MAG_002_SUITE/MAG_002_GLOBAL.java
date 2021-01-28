@@ -19,6 +19,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import Utilities.Constants;
+import Utilities.Connexion;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
@@ -28,27 +32,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MAG_002_GLOBAL {
+	public static WebDriver driver;
+	static Connexion connexion = new Connexion();
 
 	@Test
 	public void test() {
-		Class[] testClasses = { ParallelChrome.class, /*ParallelFirefox.class*/ };
-		//System.out.println("running multiple classes serially");
+		Class[] testClasses = { ParallelChrome.class, ParallelFirefox.class };
+		// System.out.println("running multiple classes serially");
 		System.out.println("running multiple classes in parallel");
-		//System.out.println("running methods in a class in parallel");  MONTE ET DESCEND
+		// System.out.println("running methods in a class in parallel"); MONTE ET DESCEND
 		JUnitCore.runClasses(ParallelComputer.classes(), testClasses);
 	}
 
 	public static class ParallelChrome {
-		private WebDriver driver;
-		private Map<String, Object> vars;
-		JavascriptExecutor js;
 
 		@Before
 		public void setUp() {
 			System.setProperty("webdriver.chrome.driver", "S:\\TESTEUR INFORMATIQUE\\7_SELENIUM\\Chromedriver.exe");
 			driver = new ChromeDriver();
-			js = (JavascriptExecutor) driver;
-			vars = new HashMap<String, Object>();
+			//js = (JavascriptExecutor) driver;
+			//vars = new HashMap<String, Object>();
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		}
 
@@ -58,31 +61,35 @@ public class MAG_002_GLOBAL {
 		}
 
 // CONNEXION
+
 		@Test
-		public void allTestCasesMag002() {
-			driver.get("http://127.0.0.1/nozama/");
-			driver.manage().window().setSize(new Dimension(1024, 1112));
-			{
-				List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'block-user-0\']/div/h2"));
-				assert (elements.size() > 0);
-			}
-			driver.findElement(By.xpath("//input[@id=\'edit-name\']")).click();
-			driver.findElement(By.xpath("//input[@id=\'edit-name\']")).sendKeys("store1");
-			driver.findElement(By.xpath("//input[@id=\'edit-pass\']")).click();
-			driver.findElement(By.xpath("//input[@id=\'edit-pass\']")).sendKeys("store1");
-			{
-				List<WebElement> elements = driver.findElements(By.xpath("//input[@id=\'edit-submit\']"));
-				assert (elements.size() > 0);
-			}
-			driver.findElement(By.xpath("//input[@id=\'edit-submit\']")).submit();
-			{
-				List<WebElement> elements = driver
-						.findElements(By.xpath("//div[@id=\'block-menu-menu-logout\']/div/h2"));
-				assert (elements.size() > 0);
-			}
+		public void allTestCasesMag002() throws Exception {
+
+			connexion.testConnexion(driver);
+
+			/*
+			 * String URL = Constants.URL; driver.get(URL);
+			 * 
+			 * driver.manage().window().setSize(new Dimension(1024, 1112)); {
+			 * List<WebElement> elements =
+			 * driver.findElements(By.xpath("//div[@id=\'block-user-0\']/div/h2")); assert
+			 * (elements.size() > 0); }
+			 * driver.findElement(By.xpath("//input[@id=\'edit-name\']")).click();
+			 * driver.findElement(By.xpath("//input[@id=\'edit-name\']")).sendKeys("store1")
+			 * ; driver.findElement(By.xpath("//input[@id=\'edit-pass\']")).click();
+			 * driver.findElement(By.xpath("//input[@id=\'edit-pass\']")).sendKeys("store1")
+			 * ; { List<WebElement> elements =
+			 * driver.findElements(By.xpath("//input[@id=\'edit-submit\']")); assert
+			 * (elements.size() > 0); }
+			 * driver.findElement(By.xpath("//input[@id=\'edit-submit\']")).submit(); {
+			 * List<WebElement> elements = driver
+			 * .findElements(By.xpath("//div[@id=\'block-menu-menu-logout\']/div/h2"));
+			 * assert (elements.size() > 0); }
+			 */
 // DEBUT CT MAG_002_N
-			assertThat(driver.findElement(By.xpath("//a[contains(text(),\'Créer un article\')]")).getText(),
-					is("Créer un article"));
+			/*
+			assertThat(driver.findElement(By.xpath("//a[contains(text(),\'Créer un article\')]")).getText(),is("Créer un article"));
+			*/
 			driver.findElement(By.xpath("//a[contains(text(),\'Créer un article\')]")).click();
 			{
 				List<WebElement> elements = driver.findElements(By.xpath("//a[contains(text(),\'Produit\')]"));
@@ -231,7 +238,6 @@ public class MAG_002_GLOBAL {
 	}
 // FIN SUITE MAG_002
 
-	/*
 	public static class ParallelFirefox {
 		private WebDriver driver;
 		private Map<String, Object> vars;
@@ -253,8 +259,10 @@ public class MAG_002_GLOBAL {
 
 //CONNEXION
 		@Test
-		public void allTestCasesMag002() {
-			driver.get("http://127.0.0.1/nozama/");
+		public void allTestCasesMag002() throws Exception {
+			String URL = Constants.URL;
+			driver.get(URL);
+
 			driver.manage().window().setSize(new Dimension(1024, 1112));
 			{
 				List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'block-user-0\']/div/h2"));
@@ -299,7 +307,8 @@ public class MAG_002_GLOBAL {
 				assert (elements.size() > 0);
 			}
 			driver.findElement(By.xpath("//input[@id=\'edit-model\']")).sendKeys("gb");
-			//driver.findElement(By.cssSelector(".fieldset-wrapper > table:nth-child(2) tr")).click();
+			// driver.findElement(By.cssSelector(".fieldset-wrapper > table:nth-child(2)
+			// tr")).click();
 			{
 				List<WebElement> elements = driver.findElements(By.xpath("//input[@id=\'edit-sell-price\']"));
 				assert (elements.size() > 0);
@@ -348,7 +357,8 @@ public class MAG_002_GLOBAL {
 				List<WebElement> elements = driver.findElements(By.xpath("//input[@id=\'edit-sell-price\']"));
 				assert (elements.size() > 0);
 			}
-			//driver.findElement(By.cssSelector(".fieldset-wrapper > table:nth-child(2) tr")).click();
+			// driver.findElement(By.cssSelector(".fieldset-wrapper > table:nth-child(2)
+			// tr")).click();
 			driver.findElement(By.xpath("//input[@id=\'edit-sell-price\']")).click();
 			driver.findElement(By.xpath("//input[@id=\'edit-sell-price\']")).sendKeys("60");
 			{
@@ -423,7 +433,5 @@ public class MAG_002_GLOBAL {
 		}
 		// FIN DECONNEXION
 	}
-	*/
 //FIN SUITE MAG_002
 }
-	
